@@ -3,22 +3,20 @@ import {Category, Prediction, Priority} from "./types";
 import getPredictionFromImage from "./getPredicitonFromImage";
 import {chat, Message} from "../../service/openai";
 
+interface RequestBody {
+  id: string;
+  image: string;
+}
+
 // Endpoint for receiving an image from the client
 export async function POST(req: NextRequest, res: NextResponse) {
-  const { image } = await req.json()
-  const prediction = getPredictionFromImage(image);
+  const { id, image }: RequestBody = await req.json()
+  const prediction = getPredictionFromImage(image)
 
   // const panelId = req.nextUrl.searchParams.get('panelId') as string;
-  const panelId = 'foo-panel';
-  const description = await generateDescription(panelId, prediction);
+  const description = await generateDescription(id, prediction);
 
-  return NextResponse.json({
-    panelId: "123",
-    location: { lat: 0, lng: 0 },
-    priority: Priority.HIGH_IMPACT,
-    category: Category.CRACK,
-    description
-  })
+  return NextResponse.json(description)
 }
 
 async function generateDescription(panelId: string, predictions: Prediction[]): Promise<string> {

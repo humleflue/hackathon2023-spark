@@ -18,3 +18,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
     description: "Big crack. Doesn't work."
   })
 }
+
+// TODO Remove stupid impl.
+export async function GET(req: NextRequest): Promise<any> {
+    const prompt = req.nextUrl.searchParams.get('p') as string;
+    const text = await completion(prompt, Math.ceil(prompt.length / 4) + 100);
+
+    return NextResponse.json(text);
+}
